@@ -115,6 +115,35 @@ def main():
                     print("------------ checking get_all_longest_path_depths ------------")
                     print(len(hier.get_all_longest_path_depths()))
 
+                    print("------------ checking lowest_common_ancestors ------------")
+
+                    concept_id = 254206003
+                    opt_concept_2 = release.get_concept_from_id(concept_id)
+                    for node in hier.lowest_common_ancestors(set([opt_concept_1, opt_concept_2])):
+                        print(node.get_name())
+
+                    print("------------ checking is_descendant_of ------------")
+
+                    concept_id = 27550009
+                    opt_concept_3 = release.get_concept_from_id(concept_id)
+
+                    print(hier.is_descendant_of(opt_concept_1, opt_concept_3))
+                    print(hier.is_descendant_of(opt_concept_2, opt_concept_3))
+
+
+
+                    print("------------ checking get_topological_descendant_list_within_distance ----------------")
+                    concept_id = 27550009
+                    opt_concept = release.get_concept_from_id(concept_id)
+                    print("opt_concept.getName() =", opt_concept.get_name())
+                    result_list = hier.get_topological_descendant_list_within_distance(opt_concept, 2)
+                    print("------------ count: ", len(result_list))
+                    for result in result_list[-3:]:
+                        print(result.get_node().get_name())
+                        print(result.get_depth())
+
+
+
                 except IOError as e:
                     # TODO: write error...
                     pass

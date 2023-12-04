@@ -299,7 +299,7 @@ class Hierarchy:
     def lowest_common_ancestors(self, nodes):
         ancestor_hierarchy = self.get_ancestor_hierarchy(nodes)
         visitor = LowestCommonAncestorVisitor(ancestor_hierarchy, nodes)
-        ancestor_hierarchy.topological_up(nodes, visitor)
+        ancestor_hierarchy.topological_up_by_set(nodes, visitor)
         return visitor.get_lowest_common_ancestors()
 
     def is_ancestor_of(self, potential_ancestor, node):
