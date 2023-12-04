@@ -53,20 +53,63 @@ def main():
                     opt_concept = release.get_concept_from_id(concept_id)
                     print("opt_concept.getName() =", opt_concept.get_name())
 
-                    concept_id = 301095005
-                    opt_concept = release.get_concept_from_id(concept_id)
                     hier = release.get_concept_hierarchy()
-                    # anc_hier= hier.get_ancestor_hierarchy([opt_concept])
-                    for node in hier.get_ancestors([opt_concept]):
+
+                    print("------------ checking get_descendant_hierarchy_within_distance ----------------")
+                    concept_id = 106063007
+                    opt_concept = release.get_concept_from_id(concept_id)
+                    print("opt_concept.getName() =", opt_concept.get_name())
+                    concept_set = hier.get_descendant_hierarchy_within_distance(opt_concept, 1).get_nodes()
+                    print("------------ count: ", len(concept_set))
+                    for node in concept_set:
                         print(node.get_name())
 
-                    # for node in hier.get([opt_concept]):
-                    #     print(node.get_name())
+                    print("------------ checking get_children ------------")
+                    print("opt_concept.getName() =", opt_concept.get_name())
+                    concept_set = hier.get_children(opt_concept)
+                    print("------------ count: ",  len(concept_set))
+                    for node in concept_set:
+                        print(node.get_name())
 
-                    print('show paths')
+                    concept_id = 301095005
+                    opt_concept = release.get_concept_from_id(concept_id)
+                    # hier = release.get_concept_hierarchy()
+                    # anc_hier= hier.get_ancestor_hierarchy([opt_concept])
+
+                    print("------------ checking get_ancestors ------------")
+                    for node in hier.get_ancestors({opt_concept}):
+                        print(node.get_name())
+
+                    print("------------ checking get_siblings ------------")
+
+                    opt_concept = release.get_concept_from_id(concept_id)
+                    print("opt_concept.getName() =", opt_concept.get_name())
+                    for node in hier.get_siblings(opt_concept):
+                        print(node.get_name())
+
+                    print("------------ checking get_strict_siblings ------------")
+                    print("opt_concept.getName() =", opt_concept.get_name())
+                    for node in hier.get_strict_siblings(opt_concept):
+                        print(node.get_name())
+
+                    print("------------ checking get_all_paths_to ------------")
                     paths = hier.get_all_paths_to(opt_concept)
                     for path in paths:
                         print('->'.join([x.get_name() for x in path]))
+
+                    concept_id = 301095005
+                    opt_concept_1 = release.get_concept_from_id(concept_id)
+
+                    concept_id = 106063007
+                    opt_concept_2 = release.get_concept_from_id(concept_id)
+
+                    print("------------ checking is_ancestor_of ------------")
+                    print(hier.is_ancestor_of(opt_concept_2, opt_concept_1))
+
+                    print("------------ checking is_descendant_of ------------")
+                    print(hier.is_descendant_of(opt_concept_1, opt_concept_2))
+
+
 
 
                 except IOError as e:

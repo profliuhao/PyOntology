@@ -107,16 +107,8 @@ class Hierarchy:
                     visited.add(child)
 
     def bfs_up(self, starting_points, visitor):
-
-        if isinstance(starting_points, list):
-            queue = deque(starting_points)
-        else:
-            queue = deque([starting_points])
-
-        if isinstance(starting_points, list):
-            visited = set(starting_points)
-        else:
-            visited = set([starting_points])
+        queue = deque(starting_points)
+        visited = set(starting_points)
 
         while queue and not visitor.is_finished():
             current_node = queue.popleft()
@@ -198,13 +190,10 @@ class Hierarchy:
 
     def get_member_subhierarchy_roots(self, node):
         visitor = TopRootVisitor(self)
-        self.bfs_up(node, visitor)
+        self.bfs_up({node}, visitor)
         return visitor.get_roots()
 
     def get_ancestor_hierarchy(self, nodes):
-
-        if not isinstance(nodes, list):
-            nodes = [nodes]
 
         ancestor_roots = set()
 
@@ -226,7 +215,7 @@ class Hierarchy:
         return ancestors
 
     def get_all_paths_to(self, node):
-        ancestor_hierarchy = self.get_ancestor_hierarchy(node)
+        ancestor_hierarchy = self.get_ancestor_hierarchy({node})
         visitor = AllPathsToNodeVisitor(self, node)
         ancestor_hierarchy.topological_down(visitor)
         return visitor.get_all_paths()
@@ -314,7 +303,8 @@ class Hierarchy:
         return visitor.get_lowest_common_ancestors()
 
     def is_ancestor_of(self, potential_ancestor, node):
-        return potential_ancestor in self.get_ancestors(node)
+
+        return potential_ancestor in self.get_ancestors({node})
 
     def is_descendant_of(self, potential_descendant, node):
-        return potential_descendant in self.get_descendants(node)
+        return potential_descendant in self.get_descendants({node})
