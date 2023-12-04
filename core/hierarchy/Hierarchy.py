@@ -150,9 +150,9 @@ class Hierarchy:
                     parent_count_in_subhierarchy[child] -= 1
 
     def topological_up(self, starting_point, visitor):
-        self.topological_up(set([starting_point]), visitor)
+        self.topological_up_by_set(set([starting_point]), visitor)
 
-    def topological_up(self, starting_points, visitor):
+    def topological_up_by_set(self, starting_points, visitor):
         subhierarchy_nodes = self.get_ancestors(starting_points)
         subhierarchy_nodes.update(starting_points)
 
@@ -178,7 +178,7 @@ class Hierarchy:
 
     def count_descendants(self, node):
         visitor = SubhierarchySizeVisitor(self)
-        self.bfs_down(node, visitor)
+        self.bfs_down({node}, visitor)
         return visitor.get_descendant_count() - 1
 
     def get_descendants(self, nodes):

@@ -71,6 +71,9 @@ def main():
                     for node in concept_set:
                         print(node.get_name())
 
+                    print("------------ checking count_descendants ------------")
+                    print("------------ count of descendants: ", hier.count_descendants(opt_concept))
+
                     concept_id = 301095005
                     opt_concept = release.get_concept_from_id(concept_id)
                     # hier = release.get_concept_hierarchy()
@@ -109,8 +112,8 @@ def main():
                     print("------------ checking is_descendant_of ------------")
                     print(hier.is_descendant_of(opt_concept_1, opt_concept_2))
 
-
-
+                    print("------------ checking get_all_longest_path_depths ------------")
+                    print(len(hier.get_all_longest_path_depths()))
 
                 except IOError as e:
                     # TODO: write error...

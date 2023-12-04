@@ -2,9 +2,13 @@
 
 from collections import defaultdict
 
-class HierarchyDepthVisitor:
+from core.hierarchy.visitor.AncestorDepthResult import AncestorDepthResult
+from core.hierarchy.visitor.TopologicalVisitor import TopologicalVisitor
+
+
+class HierarchyDepthVisitor(TopologicalVisitor):
     def __init__(self, hierarchy):
-        self.hierarchy = hierarchy
+        super().__init__(hierarchy)
         self.depth = defaultdict(int)
         self.result = []
 
