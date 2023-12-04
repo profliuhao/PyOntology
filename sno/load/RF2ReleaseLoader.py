@@ -79,7 +79,8 @@ class RF2ReleaseLoader:
 
         for concept in concepts.values():
             if concept.get_id() in stated_attribute_relationships:
-                stated_concept = SCTStatedConcept(concept)  # Assuming SCTStatedConcept is used
+                # stated_concept = SCTStatedConcept(concept)  # Assuming SCTStatedConcept is used
+                stated_concept = concept  # Assuming SCTStatedConcept is used
                 stated_concept.set_stated_relationships(stated_attribute_relationships[concept.get_id()])
             else:
                 concept.set_stated_relationships(set())
