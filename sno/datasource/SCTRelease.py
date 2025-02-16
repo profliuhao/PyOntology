@@ -1,8 +1,7 @@
-
 from collections import defaultdict
 
+from core.hierarchy import Hierarchy
 from core.ontology.Ontology import Ontology
-
 
 
 class SCTRelease(Ontology):
@@ -11,7 +10,7 @@ class SCTRelease(Ontology):
             self.description = description
             self.concept = concept
 
-    def __init__(self, release_info, active_concept_hierarchy, all_concepts):
+    def __init__(self, release_info, active_concept_hierarchy: Hierarchy, all_concepts):
         super().__init__(active_concept_hierarchy)
         self.release_info = release_info
         self.descriptions = []
