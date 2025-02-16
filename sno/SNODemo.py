@@ -8,7 +8,7 @@ from sno.load.RF2ReleaseLoader import RF2ReleaseLoader
 
 
 def main():
-    input_directory = Path("D:/Ontology/SNO")
+    input_directory = Path("G:/Ontology/SNO")
     print("Loading")
     default_cat = False
 
@@ -19,7 +19,7 @@ def main():
             if file.is_dir():
                 print("Find file:", file.absolute())
                 # dir_list = LoadLocalRelease.find_release_folders(file)
-                dir_list = ['D:\Ontology\SNO\SnomedCT_InternationalRF2_PRODUCTION_20210731T120000Z\Snapshot\Terminology']
+                dir_list = ['G:\Ontology\SNO\SnomedCT_InternationalRF2_PRODUCTION_20210731T120000Z\Snapshot\Terminology']
                 for t in dir_list:
                     print("dir", t)
 
@@ -141,6 +141,7 @@ def main():
                     for result in result_list[-3:]:
                         print(result.get_node().get_name())
                         print(result.get_depth())
+
 
 
 

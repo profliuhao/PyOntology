@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from collections import deque
+from typing import Generic, TypeVar
 
 from core.hierarchy.Graph import Graph
 from core.hierarchy.visitor.AllPathsToNodeVisitor import AllPathsToNodeVisitor
@@ -12,19 +15,26 @@ from core.hierarchy.visitor.SubhierarchySizeVisitor import SubhierarchySizeVisit
 from core.hierarchy.visitor.TopRootVisitor import TopRootVisitor
 from core.hierarchy.visitor.TopologicalListVisitor import TopologicalListVisitor
 
+T = TypeVar('T')
 
-class Hierarchy:
-    def __init__(self, roots, source_hierarchy=None):
+class Hierarchy(Generic[T]):
+    def __init__(self, roots: T, source_hierarchy=None):
         self.base_graph = Graph()
-        self.roots = set(roots)
+        # Handle different input types for roots
+        if isinstance(roots, (set, list)):
+            self.roots = set(roots)
+        else:
+            # Single root case
+            self.roots = {roots}
+        # self.roots = set(roots)
 
         if source_hierarchy is not None:
             self.initialize_subhierarchy(roots, source_hierarchy)
         else:
-            for root in roots:
+            for root in self.roots:
                 self.base_graph.add_node(root)
 
-    def initialize_subhierarchy(self, roots, source_hierarchy):
+    def initialize_subhierarchy(self, roots: T, source_hierarchy):
         self.roots = set(roots)
 
         for root in roots:
@@ -48,10 +58,10 @@ class Hierarchy:
     def size(self):
         return len(self.base_graph.get_nodes())
 
-    def add_node(self, node):
+    def add_node(self, node: T):
         self.base_graph.add_node(node)
 
-    def add_edge(self, from_node, to_node):
+    def add_edge(self, from_node: T, to_node: T):
         self.base_graph.add_edge_by_nodes(from_node, to_node)
 
     def add_edge_from_edge(self, edge):
@@ -70,10 +80,10 @@ class Hierarchy:
         for edge in other_edges:
             self.add_edge_from_edge(edge)
 
-    def get_subhierarchy_rooted_at(self, root):
+    def get_subhierarchy_rooted_at(self, root: T):
         return Hierarchy(set([root]), self)
 
-    def get_subhierarchy_rooted_at_set(self, roots):
+    def get_subhierarchy_rooted_at_set(self, roots: T):
         return Hierarchy(roots, self)
 
     def get_edges(self):
@@ -82,13 +92,13 @@ class Hierarchy:
     def get_nodes(self):
         return self.base_graph.get_nodes()
 
-    def get_children(self, node):
+    def get_children(self, node: T):
         return self.base_graph.get_incoming_edges(node)
 
-    def get_parents(self, node):
+    def get_parents(self, node: T):
         return self.base_graph.get_outgoing_edges(node)
 
-    def contains(self, node):
+    def contains(self, node: T):
         return self.base_graph.contains(node)
 
     def bfs_down(self, starting_points, visitor):
@@ -176,24 +186,24 @@ class Hierarchy:
                 else:
                     child_count_in_subhierarchy[parent] -= 1
 
-    def count_descendants(self, node):
+    def count_descendants(self, node: T):
         visitor = SubhierarchySizeVisitor(self)
         self.bfs_down({node}, visitor)
         return visitor.get_descendant_count() - 1
 
-    def get_descendants(self, nodes):
+    def get_descendants(self, nodes: T):
         visitor = SubhierarchyMembersVisitor(self)
         self.bfs_down(nodes, visitor)
         members = visitor.get_subhierarchy_members()
         members.difference_update(nodes)
         return members
 
-    def get_member_subhierarchy_roots(self, node):
+    def get_member_subhierarchy_roots(self, node: T):
         visitor = TopRootVisitor(self)
         self.bfs_up({node}, visitor)
         return visitor.get_roots()
 
-    def get_ancestor_hierarchy(self, nodes):
+    def get_ancestor_hierarchy(self, nodes: T):
 
         ancestor_roots = set()
 
@@ -209,12 +219,12 @@ class Hierarchy:
         self.bfs_up(nodes, ancestor_hierarchy_visitor)
         return ancestor_hierarchy_visitor.get_ancestor_hierarchy()
 
-    def get_ancestors(self, nodes):
+    def get_ancestors(self, nodes: T):
         ancestors = self.get_ancestor_hierarchy(nodes).get_nodes()
         ancestors.difference_update(nodes)
         return ancestors
 
-    def get_all_paths_to(self, node):
+    def get_all_paths_to(self, node: T):
         ancestor_hierarchy = self.get_ancestor_hierarchy({node})
         visitor = AllPathsToNodeVisitor(self, node)
         ancestor_hierarchy.topological_down(visitor)
@@ -225,7 +235,7 @@ class Hierarchy:
         self.topological_down(visitor)
         return visitor.get_topological_list()
 
-    def get_descendant_hierarchy_within_distance(self, node, max_distance):
+    def get_descendant_hierarchy_within_distance(self, node: T, max_distance):
         hierarchy = Hierarchy(set([node]))
         level_processed = 0
         level_queue = deque([node])
@@ -250,13 +260,13 @@ class Hierarchy:
 
         return hierarchy
 
-    def get_topological_descendant_list_within_distance(self, node, distance):
+    def get_topological_descendant_list_within_distance(self, node: T, distance):
         hierarchy_within_distance = self.get_descendant_hierarchy_within_distance(node, distance)
         visitor = HierarchyDepthVisitor(hierarchy_within_distance)
         hierarchy_within_distance.topological_down(visitor)
         return visitor.get_result()
 
-    def get_siblings(self, node):
+    def get_siblings(self, node: T):
         node_parents = self.get_parents(node)
         siblings = set()
 
@@ -266,7 +276,7 @@ class Hierarchy:
         siblings.discard(node)
         return siblings
 
-    def get_strict_siblings(self, node):
+    def get_strict_siblings(self, node: T):
         node_parents = self.get_parents(node)
         strict_siblings = set()
 
@@ -296,15 +306,15 @@ class Hierarchy:
         self.topological_down(hierarchy_depth_visitor)
         return hierarchy_depth_visitor.get_all_depths()
 
-    def lowest_common_ancestors(self, nodes):
+    def lowest_common_ancestors(self, nodes: T):
         ancestor_hierarchy = self.get_ancestor_hierarchy(nodes)
         visitor = LowestCommonAncestorVisitor(ancestor_hierarchy, nodes)
         ancestor_hierarchy.topological_up_by_set(nodes, visitor)
         return visitor.get_lowest_common_ancestors()
 
-    def is_ancestor_of(self, potential_ancestor, node):
+    def is_ancestor_of(self, potential_ancestor, node: T):
 
         return potential_ancestor in self.get_ancestors({node})
 
-    def is_descendant_of(self, potential_descendant, node):
+    def is_descendant_of(self, potential_descendant, node: T):
         return potential_descendant in self.get_descendants({node})
