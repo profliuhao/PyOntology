@@ -1,5 +1,10 @@
 # PyOntology (in progress)
 
+![alt text](pic/ui.png)
+
+
+
+
 The goal of this project is to provide a Python implementation of Ontology Abstraction Framework (OAF). Converting OAF to a Python version offers a multitude of benefits, each contributing to a more efficient and adaptable software development process:
 
 - Readability and Maintainability: Python's clean syntax and readability make the code more accessible, fostering collaboration and easing onboarding for new developers.
@@ -22,6 +27,7 @@ The goal of this project is to provide a Python implementation of Ontology Abstr
 
 - User-Centric Experience: With improved web deployment and GUI capabilities, the conversion enhances the potential for a more engaging and user-friendly experience
 
+![alt text](pic/newplot.png)
 
 ## What is Ontology Abstraction Framework (OAF)?
 The Ontology Abstraction Framework (OAF) is a free and open-source software system for visually summarizing the structures of ontologies. The OAF enables users to create and explore structural summaries of ontologies called abstraction networks. The OAF is being developed as part of an ongoing research project at the Structural Analysis of Biomedical Ontologies Center (SABOC) in the Computer Science Department at the New Jersey Insitute of Technology. The OAF is playing a key role in SABOC's research into the structure of biomedical ontologies (specifically, the ontologies found in the NCBO BioPortal).

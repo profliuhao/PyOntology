@@ -17,3 +17,11 @@ class PArea:
 
     def get_relationships(self) -> Set[InheritableProperty]:
         return self.relationships
+
+    def get_name(self, separator: str = ", ") -> str:
+        if not self.relationships:
+            return "∅"
+        return separator.join(sorted(rel for rel in self.relationships))
+
+    def get_pareas(self):
+        return [self.concept_hierarchy.get_root()]
